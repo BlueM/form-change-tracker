@@ -15,13 +15,14 @@ var Formidabel = new function() {
     this.chngVals    = {};
     this.inited      = false;
     this.resetButton = null;
+    this.form        = null;
     this.labelPrefix = '';
 
     /**
 	 * Starts tracking of changes in forms.
 	 * Usage: below your form, call Formidabel.init(arg1, arg2, arg3)
      *
-	 * @param thing       HTML element ID of the form to be observed.
+	 * @param selector    HTML element ID of the form to be observed.
 	 * @param classname   Optional CSS classname that should be added to any
 	 *                    <label> element whose form element has been changed.
 	 * @param labelPrefix Optional string that's used as prefix for (all!)
@@ -29,10 +30,10 @@ var Formidabel = new function() {
 	 *                    the element name is "foo" and its ID is "form_foo",
 	 *                    set arg3 to "foo_").
 	 */
-	this.init = function(thing, classname, labelPrefix) {
+	this.init = function(selector, classname, labelPrefix) {
 
-		this.form        = $('#' + thing);
-		this.resetButton = this.form.find('input[type="reset"]').eq(0);
+		this.form        = $(selector);
+        this.resetButton = this.form.find('input[type="reset"]').eq(0);
 		this.classname   = classname;
 		this.inited      = true;
 
