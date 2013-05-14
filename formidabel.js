@@ -26,14 +26,11 @@ function Formidabel(selector, classname, labelPrefix) {
 
     this.origVals    = {};
     this.chngVals    = {};
-    this.labelPrefix = '';
     this.form        = $(selector);
     this.resetButton = this.form.find('input[type="reset"]').eq(0);
     this.classname   = classname;
 
-    if (labelPrefix) {
-        this.labelPrefix = labelPrefix;
-    }
+    labelPrefix = labelPrefix || '';
 
     var thisInstance = this;
 
@@ -49,7 +46,7 @@ function Formidabel(selector, classname, labelPrefix) {
                 var formItem = event.target;
                 var currVal  = Formidabel.elementValue(formItem);
                 var theName  = formItem.name;
-                var labelElement = $('label[for="' + thisInstance.labelPrefix + theName.replace(/\[\]/, '') + '"]');
+                var labelElement = $('label[for="' + labelPrefix + theName.replace(/\[\]/, '') + '"]');
                 if (labelElement.length) {
                     labelElement = labelElement[0];
                 } else {
@@ -64,7 +61,7 @@ function Formidabel(selector, classname, labelPrefix) {
                     thisInstance.chngVals[theName] = false;
                     thisInstance.markFormAsDirty(thisInstance.formContainsEdits());
                     if (labelElement) {
-                        $(labelElement).removeClass(thisInstance.classname);
+                        $(labelElement).removeClass(classname);
                     }
                 }
             });
@@ -101,8 +98,9 @@ Formidabel.prototype.markFormAsDirty = function (isDirty) {
     } else {
         this.resetButton.attr('disabled', 'disabled');
         this.chngVals = {};
+        var cssClass  = this.classname;
         $('label').each(function () {
-            $(this).removeClass(this.classname);
+            $(this).removeClass(cssClass);
         });
     }
 };
