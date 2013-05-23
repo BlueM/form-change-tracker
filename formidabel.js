@@ -17,7 +17,7 @@
  *                    the element name is "foo" and its ID is "form_foo",
  *                    set arg3 to "foo_").
  *
- * @requires jQuery v1.3 or later.
+ * @requires jQuery v1.6 or later.
  * @author Carsten Bluem <carsten@bluem.net>
  */
 function Formidabel(selector, classname, labelPrefix) {
@@ -247,7 +247,7 @@ Formidabel.bindElement = function (target, source, type) {
 Formidabel.boolValue = function (elmnt) {
     "use strict";
     if (elmnt.type === "radio" || elmnt.type === "checkbox") {
-        return Boolean($(elmnt).attr('checked'));
+        return Boolean($(elmnt).prop('checked'));
     }
     if (elmnt.type === "select-multiple") {
         return Boolean($(elmnt).val());
