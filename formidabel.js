@@ -12,15 +12,11 @@
  * @param selector    HTML element ID of the form to be observed.
  * @param classname   Optional CSS classname that should be added to any
  *                    <label> element whose form element has been changed.
- * @param labelPrefix Optional string that's used as prefix for (all!)
- *                    element names to construct the element IDs (i.e.: if
- *                    the element name is "foo" and its ID is "form_foo",
- *                    set arg3 to "foo_").
- *
- * @requires jQuery v1.6 or later.
+
+ * @requires jQuery v1.6 or later
  * @author Carsten Bluem <carsten@bluem.net>
  */
-function Formidabel(selector, classname, labelPrefix) {
+function Formidabel(selector, classname) {
 
     "use strict";
 
@@ -29,8 +25,6 @@ function Formidabel(selector, classname, labelPrefix) {
     this.form        = $(selector);
     this.resetButton = this.form.find('input[type="reset"]').eq(0);
     this.classname   = classname;
-
-    labelPrefix = labelPrefix || '';
 
     var thisInstance = this;
 
@@ -46,7 +40,8 @@ function Formidabel(selector, classname, labelPrefix) {
                 var formItem = event.target;
                 var currVal  = Formidabel.elementValue(formItem);
                 var theName  = formItem.name;
-                var labelElement = $('label[for="' + labelPrefix + theName.replace(/\[\]/, '') + '"]');
+                var theId    = $(this).attr('id');
+                var labelElement = $('label[for="' + theId + '"]');
                 if (labelElement.length) {
                     labelElement = labelElement[0];
                 } else {
