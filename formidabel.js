@@ -267,7 +267,7 @@ Formidabel.elementValue = function (elmnt) {
         return $('input:radio[name=' + elmnt.name + ']:checked').val();
     }
     if (elmnt.type === "checkbox") {
-        return $(elmnt).attr('checked') ? $(elmnt).val() : '';
+        return Boolean($(elmnt).prop('checked'));
     }
     if (elmnt.type === "select-multiple") {
         var value = $(elmnt).val();
