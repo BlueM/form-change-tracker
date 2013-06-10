@@ -1,20 +1,20 @@
 
 /**
- * FORMIDABEL
- * Tracks edits in XHTML forms in order to provide visual feedback of changed
- * items (by changing labels' CSS classes) and enabling/disabling the reset
- * button depending on the form state. It will automatically enable
- * and disable the reset button (should be disabled initially in the
- * XHTML form) and optionally add CSS classes to labels of changed
- * elements. Additionally, using bindElement(), provides managing
- * dependencies between form elements.
+ * JavaScript library for enhancing HTML form user experience
+ *
+ * Tracks edits in XHTML forms in order to provide visual feedback of change items (by
+ * changing labels' CSS classes) and enabling/disabling the reset button automatically.
+ * The form's clean/dirty state can also be queries from outside, for instance for
+ * getting the user's confirmation for abandoning a dirty form.
+ * Additionally, using bindElement(), provides managing dependencies between form elements.
  *
  * @param selector    HTML element ID of the form to be observed.
  * @param classname   Optional CSS classname that should be added to any
  *                    <label> element whose form element has been changed.
-
+ *
  * @requires jQuery v1.6 or later
- * @author Carsten Bluem <carsten@bluem.net>
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @link    https://bitbucket.org/BlueM/formidabel
  */
 function Formidabel(selector, classname) {
 
@@ -67,7 +67,8 @@ function Formidabel(selector, classname) {
 };
 
 /**
- * Notifies change of an element to Formidabel
+ * Notifies change of an element to Formidabel. This method is usually not needed, but only in special
+ * cases like having a JS WYSIWYG editor in the form, whose edit state cannot be tracked by Formidabel.
  *
  * @param nameValue    Value of form element's "name" attribute
  * @param labelElement Element's <labelElement> (HTML object, not jQuery object)
@@ -228,7 +229,7 @@ Formidabel.bindElement = function (target, source, type) {
 };
 
 /**
- * Returns whether the contents / state of the given element evaluates
+ * Returns whether the contents/state of the given element evaluates
  * to true, i.e.: contains value, is checked, has selection etc.
  *
  * @param elmnt     HTML form element (not jQuery element)
@@ -278,4 +279,3 @@ Formidabel.elementValue = function (elmnt) {
     }
     return $(elmnt).val();
 };
-
