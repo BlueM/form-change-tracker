@@ -148,20 +148,21 @@ Formidabel.eventNameByType = function (element) {
 }
 
 /**
- * Binds an element's visibility or "disabled" status to another input
- * element or triggers a function that may operate on that element. To ease
- * setting the inital state, upon page loading the actions is performed as
- * well. Optional 4th argument: A callback which will be executed to
- * determine whether the source element's status/value evaluates to true or
+ * Binds an element's visibility or "disabled" status to another input element or
+ * triggers a function that may operate on that element.
+ *
+ * To ease setting the inital state, upon page loading the actions is performed as well.
+ * An optional 4th argument can be given, which is expected to be a callback which will be
+ * executed to determine whether the source element's status/value evaluates to true or
  * false. If not given, Formidabel.boolValue() will be used.
  *
  * @param target  Selector for the target element
  * @param source  Selector for the source element
- * @param type    One of the strings "enable", "disable", "show"
- *                or "hide" or a function that will called with the
- *                controlled elements as 1st and the controlling
- *                element as 2nd argument. In case of some other
- *                argument, an an alert() will be displayed.
+ * @param type    One of the strings "enable", "enable!", "disable", "disable!" (= when with
+ *                exclamation mark, will also clear the element when it's disabled), "show" or
+ *                "hide" or a function that will called with the controlled
+ *                elements as 1st and the controlling element as 2nd argument. In case of some
+ *                other argument, an alert() will be displayed.
  */
 Formidabel.bindElement = function (target, source, type) {
 
@@ -194,9 +195,25 @@ Formidabel.bindElement = function (target, source, type) {
                     target.attr('disabled', 'disabled');
                 }
                 break;
+            case 'enable!':
+                if (val) {
+                    target.removeAttr('disabled');
+                } else {
+                    Formidabel.clear(target.get(0));
+                    target.attr('disabled', 'disabled');
+                }
+                break;
             case 'disable':
                 if (val) {
                     target.attr('disabled', 'disabled');
+                } else {
+                    target.removeAttr('disabled');
+                }
+                break;
+            case 'disable!':
+                if (val) {
+                    target.attr('disabled', 'disabled');
+                    Formidabel.clear(target);
                 } else {
                     target.removeAttr('disabled');
                 }
@@ -278,4 +295,22 @@ Formidabel.elementValue = function (elmnt) {
         return '';
     }
     return $(elmnt).val();
+};
+
+/**
+ * Clears an input element
+ *
+ * @param elmnt HTML form element (not jQuery element)
+ */
+Formidabel.clear = function (elmnt) {
+    "use strict";
+    if (elmnt.type === "radio") {
+        this.selectedIndex = -1;
+        return;
+    }
+    if (elmnt.type === "checkbox") {
+        $(elmnt).prop('checked', false);
+        return;
+    }
+    $(elmnt).val('');
 };
