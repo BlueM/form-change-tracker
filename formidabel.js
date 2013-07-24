@@ -8,7 +8,7 @@
  * getting the user's confirmation for abandoning a dirty form.
  * Additionally, using bindElement(), provides managing dependencies between form elements.
  *
- * @param selector    HTML element ID of the form to be observed.
+ * @param selector    Selector for the form to be observed.
  * @param classname   Optional CSS classname that should be added to any
  *                    <label> element whose form element has been changed.
  *
