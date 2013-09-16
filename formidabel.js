@@ -255,7 +255,6 @@ Formidabel.bindElement = function (target, source, type) {
  *                  (not checked) or checkbox's value. For a multiple-select, it
  *                  will return the serialized currently selected value. For other
  *                  types, will return whatever is returned from jQuery's .val().
- * @todo Inline
  */
 Formidabel.boolValue = function (elmnt) {
     "use strict";
