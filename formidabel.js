@@ -132,9 +132,14 @@ Formidabel.eventNameByType = function (element) {
         return '';
     }
     switch (element.type.toLowerCase()) {
-        case 'text':
+        case 'email':
+        case 'number':
         case 'password':
+        case 'search':
+        case 'tel':
+        case 'text':
         case 'textarea':
+        case 'url':
             return 'keyup';
         case 'checkbox':
         case 'radio':
