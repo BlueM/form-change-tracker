@@ -67,8 +67,9 @@ function Formidabel(selector, classname) {
 };
 
 /**
- * Notifies change of an element to Formidabel. This method is usually not needed, but only in special
- * cases like having a JS WYSIWYG editor in the form, whose edit state cannot be tracked by Formidabel.
+ * Notifies change of an element to Formidabel. This method is usually not needed, but
+ * only in special cases like having a JS WYSIWYG editor in the form, whose edit state
+ * cannot be tracked by Formidabel.
  *
  * @param nameValue    Value of form element's "name" attribute
  * @param labelElement Element's <labelElement> (HTML object, not jQuery object)
@@ -157,13 +158,14 @@ Formidabel.eventNameByType = function (element) {
  * be executed to determine whether the source element's status/value evaluates to true
  * or false. If not given, Formidabel.boolValue() will be used.
  *
- * @param target  Selector for the target element
- * @param source  Selector for the source element
- * @param type    One of the strings "enable", "enable!", "disable", "disable!" (= when with
- *                exclamation mark, will also clear the element when it's disabled), "show" or
- *                "hide" or a function that will called with the controlled
- *                elements as 1st and the controlling element as 2nd argument. In case of some
- *                other argument, an alert() will be displayed.
+ * @param target  Selector for the target element(s)
+ * @param source  Selector for the source element. If the selector matches multiple
+ *                elements, only the first one will be used.
+ * @param type    One of the strings "enable", "enable!", "disable", "disable!" (= when
+ *                with exclamation mark, will also clear the element when it's disabled),
+ *                "show" or "hide" or a function that will be called with the controlled
+ *                elements as 1st and the controlling element as 2nd argument. In case of
+ *                some other argument, an alert() will be displayed.
  */
 Formidabel.bindElement = function (target, source, type) {
 
