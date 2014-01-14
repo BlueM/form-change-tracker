@@ -151,10 +151,11 @@ Formidabel.eventNameByType = function (element) {
  * Binds an element's visibility or "disabled" status to another input element or
  * triggers a function that may operate on that element.
  *
- * To ease setting the inital state, upon page loading the actions is performed as well.
- * An optional 4th argument can be given, which is expected to be a callback which will be
- * executed to determine whether the source element's status/value evaluates to true or
- * false. If not given, Formidabel.boolValue() will be used.
+ * To set the initial state and keep a consistent state after a reset, binding will be
+ * performed upon page loading and after a "onreset" event on the form.
+ * An optional 4th argument can be given, which is expected to be a callback which will
+ * be executed to determine whether the source element's status/value evaluates to true
+ * or false. If not given, Formidabel.boolValue() will be used.
  *
  * @param target  Selector for the target element
  * @param source  Selector for the source element
@@ -242,6 +243,18 @@ Formidabel.bindElement = function (target, source, type) {
     };
 
     source.bind('load ' + eventName, {target: target, type: type}, act);
+
+    var onResetAction = function() {
+        source.trigger('load');
+    };
+
+    source.closest('form').on(
+        'reset',
+        function () {
+            window.setTimeout(onResetAction, 100);
+        }
+    );
+
     source.trigger('load'); // Trigger faked event
 };
 
