@@ -22,6 +22,14 @@ function Formidabel(selector, classname) {
 
     "use strict";
 
+    this.form = $(selector);
+
+    if (this.form.length !== 1) {
+        throw new Error(
+            'The selector must select 1 element, but selects ' + this.form.length
+        );
+    }
+
     this.origVals    = {};
     this.chngVals    = {};
     this.form        = $(selector);
