@@ -30,6 +30,13 @@ function Formidabel(selector, classname) {
         );
     }
 
+    if ('form' !== this.form[0].tagName.toLowerCase()) {
+        throw new Error(
+            'The selector is expected to select a <form> element, but selected <' +
+            this.form[0].tagName.toLowerCase() + '>'
+        );
+    }
+
     this.origVals    = {};
     this.chngVals    = {};
     this.form        = $(selector);
