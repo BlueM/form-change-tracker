@@ -1,4 +1,3 @@
-
 /**
  * JavaScript library for enhancing HTML form user experience
  *
@@ -8,17 +7,19 @@
  * getting the user's confirmation for abandoning a dirty form.
  * Additionally, using bindElement(), provides managing dependencies between form elements.
  *
- * @param selector    Either selector for the form to be observed or a jQuery object,
- *                    which is expected to
- * @param [classname] CSS classname that should be added to any <label> element whose
- *                    form element has been changed. If not given, "changed" is used as
- *                    default value.
+ * @param selector      Either selector for the form to be observed or a jQuery object,
+ *                      which is expected to
+ * @param [classname]   CSS classname that should be added to any <label> element whose
+ *                      form element has been changed. If not given, "changed" is used as
+ *                      default value.
+ * @param noAutoConfirm Pass true to suppress the automatic reset confirmation
+ *                      Formidabel will display when resetting a dirty form.
  *
  * @requires jQuery v1.6 or later
  * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  * @link    https://bitbucket.org/BlueM/formidabel
  */
-function Formidabel(selector, classname) {
+function Formidabel(selector, classname, noAutoConfirm) {
 
     "use strict";
 
@@ -43,17 +44,19 @@ function Formidabel(selector, classname) {
     this.classname   = classname || 'changed';
     var thisInstance = this;
 
-    this.resetButton.on(
-        'click',
-        function(e) {
-            if (!thisInstance.isDirty() || confirm(Formidabel.confirmString())) {
-                thisInstance.form.get(0).reset();
-                thisInstance.markFormAsDirty(false);
-            } else {
-                e.preventDefault();
+    if (!noAutoConfirm) {
+        this.resetButton.on(
+            'click',
+            function(e) {
+                if (!thisInstance.isDirty() || confirm(Formidabel.confirmString())) {
+                    thisInstance.form.get(0).reset();
+                    thisInstance.markFormAsDirty(false);
+                } else {
+                    e.preventDefault();
+                }
             }
-        }
-    );
+        );
+    }
 
     this.form.find('input, textarea, select').each(function() {
         var eventName = Formidabel.eventNameByType(this);
