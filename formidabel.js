@@ -8,9 +8,11 @@
  * getting the user's confirmation for abandoning a dirty form.
  * Additionally, using bindElement(), provides managing dependencies between form elements.
  *
- * @param selector    Selector for the form to be observed.
- * @param classname   Optional CSS classname that should be added to any
- *                    <label> element whose form element has been changed.
+ * @param selector    Either selector for the form to be observed or a jQuery object,
+ *                    which is expected to
+ * @param [classname] CSS classname that should be added to any <label> element whose
+ *                    form element has been changed. If not given, "changed" is used as
+ *                    default value.
  *
  * @requires jQuery v1.6 or later
  * @license http://www.opensource.org/licenses/bsd-license.php BSD License
