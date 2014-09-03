@@ -41,8 +41,7 @@ function Formidabel(selector, classname) {
     this.chngVals    = {};
     this.form        = $(selector);
     this.resetButton = this.form.find('input[type="reset"]').eq(0);
-    this.classname   = classname;
-
+    this.classname   = classname || 'changed';
     var thisInstance = this;
 
     this.form.find('input, textarea, select').each(function() {
