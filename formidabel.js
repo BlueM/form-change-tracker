@@ -39,47 +39,68 @@ function Formidabel(selector, classname) {
 
     this.origVals    = {};
     this.chngVals    = {};
-    this.form        = $(selector);
     this.resetButton = this.form.find('input[type="reset"]').eq(0);
     this.classname   = classname || 'changed';
     var thisInstance = this;
 
+    this.resetButton.on(
+        'click',
+        function(e) {
+            if (!thisInstance.isDirty() || confirm(Formidabel.confirmString())) {
+                thisInstance.form.get(0).reset();
+                thisInstance.markFormAsDirty(false);
+            } else {
+                e.preventDefault();
+            }
+        }
+    );
+
     this.form.find('input, textarea, select').each(function() {
         var eventName = Formidabel.eventNameByType(this);
         var theName   = this.name;
-
         if (theName && eventName) {
-
-            thisInstance.origVals[theName] = Formidabel.elementValue(this);
-
-            $(this).bind(eventName, function(event) {
-                var formItem = event.target;
-                var currVal  = Formidabel.elementValue(formItem);
-                var theName  = formItem.name;
-                var theId    = $(this).attr('id');
-                var labelElement = $('label[for="' + theId + '"]');
-                if (labelElement.length) {
-                    labelElement = labelElement[0];
-                } else {
-                    labelElement = null;
-                }
-
-                if (thisInstance.origVals[theName] !== currVal) {
-                    // Element was changed
-                    thisInstance.markElementAsChanged(theName, labelElement);
-                } else {
-                    // This element is unchanged >> check others
-                    thisInstance.chngVals[theName] = false;
-                    thisInstance.markFormAsDirty(thisInstance.formContainsEdits());
-                    if (labelElement) {
-                        $(labelElement).removeClass(classname);
-                    }
-                }
+            thisInstance.origVals[theName] = thisInstance.elementValue(this);
+            $(this).bind(eventName, function() {
+                thisInstance.handleEvent(this);
             });
         }
     });
 
     this.markFormAsDirty(false);
+}
+
+/**
+ * To be invoked when the event occurred on the element. Will check if the element's
+ * value was changed from its original value or changed back to its original value, and
+ * perform the necessary actions.
+ *
+ * @param element The element on which the event was observed
+ */
+Formidabel.prototype.handleEvent = function (element) {
+
+    var theClassname = this.classname;
+    if (element.type == 'radio') {
+        $(element.form).find('input:radio[name=' + element.name + ']').each(
+            function () {
+                Formidabel.findLabel(this).removeClass(theClassname);
+            }
+        );
+    }
+
+    var labelElement = Formidabel.findLabel(element);
+
+    if (this.origVals[element.name] !== this.elementValue(element)) {
+        // Element was changed
+        this.markElementAsChanged(element, labelElement);
+    } else {
+        // This element is unchanged >> check others
+        this.chngVals[element.name] = false;
+        this.markFormAsDirty(this.isDirty());
+        if (labelElement) {
+            $(labelElement).removeClass(this.classname);
+        }
+    }
+
 };
 
 /**
@@ -87,13 +108,13 @@ function Formidabel(selector, classname) {
  * only in special cases like having a JS WYSIWYG editor in the form, whose edit state
  * cannot be tracked by Formidabel.
  *
- * @param nameValue    Value of form element's "name" attribute
+ * @param element      The form element
  * @param labelElement Element's <labelElement> (HTML object, not jQuery object)
  */
-Formidabel.prototype.markElementAsChanged = function (nameValue, labelElement) {
+Formidabel.prototype.markElementAsChanged = function (element, labelElement) {
     "use strict";
     this.markFormAsDirty(true);
-    this.chngVals[nameValue] = true;
+    this.chngVals[element.name] = true;
     if (labelElement) {
         $(labelElement).addClass(this.classname);
     }
@@ -112,7 +133,7 @@ Formidabel.prototype.markFormAsDirty = function (isDirty) {
         this.resetButton.attr('disabled', 'disabled');
         this.chngVals = {};
         var cssClass  = this.classname;
-        $('label').each(function () {
+        $(this.form).find('label').each(function () {
             $(this).removeClass(cssClass);
         });
     }
@@ -148,19 +169,45 @@ Formidabel.prototype.isDirty = function () {
 };
 
 /**
+ * Returns the value of the given element
+ *
+ * @param elmnt     HTML form element (not jQuery element)
+ * @return {String} In case of radio buttons, returns the value of the selected radio
+ *                  button. For a checkbox, returns either an empty string (not checked)
+ *                  or the checkbox's value. For a multiple-select, it will return the
+ *                  serialized currently selected value. For other types, will return
+ *                  whatever is returned from jQuery's .val() method.
+ */
+Formidabel.prototype.elementValue = function (elmnt) {
+    "use strict";
+    if (elmnt.type === "radio") {
+        var checked = $(elmnt.form).find('input:radio[name=' + elmnt.name + ']:checked');
+        return checked.length ? checked.eq(0).val() : '';
+    }
+    if (elmnt.type === "checkbox") {
+        return $(elmnt).prop('checked') ? $(elmnt).val() : '';
+    }
+    if (elmnt.type === "select-multiple") {
+        var value = $(elmnt).val();
+        if (value) {
+            return jQuery.param($(elmnt).serializeArray());
+        }
+        return '';
+    }
+    return $(elmnt).val();
+};
+
+/**
  * Returns the name of the event to be observed based on the element type
  *
- * @param element Element type
+ * @param element The element
  *
- * @return {String} String such as "click" or "keyup"
+ * @return {String} String such as "click" or "keyup". If an unknown element type
+ *                  is encountered, returns an empty string.
  */
 Formidabel.eventNameByType = function (element) {
     "use strict";
-    if (!element ||
-        !element.type) {
-        return '';
-    }
-    switch (element.type.toLowerCase()) {
+    switch (element.type) {
         case 'email':
         case 'number':
         case 'password':
@@ -178,9 +225,10 @@ Formidabel.eventNameByType = function (element) {
         case 'select-one':
         case 'select-multiple':
             return'change';
+        default:
+            return '';
     }
-    return '';
-}
+};
 
 /**
  * Binds an element's visibility or "disabled" status to another input element or
@@ -200,6 +248,8 @@ Formidabel.eventNameByType = function (element) {
  *                "show" or "hide" or a function that will be called with the controlled
  *                elements as 1st and the controlling element as 2nd argument. In case of
  *                some other argument, an alert() will be displayed.
+ *
+ * @deprecated Will be removed
  */
 Formidabel.bindElement = function (target, source, type) {
 
@@ -211,8 +261,7 @@ Formidabel.bindElement = function (target, source, type) {
     var eventName = Formidabel.eventNameByType(source.get(0));
 
     if (!eventName) {
-        alert('Unable to bind ' + source);
-        return;
+        throw new Error('Unable to bind ' + source);
     }
 
     var callback = arguments.length == 4 ? arguments[3] : null;
@@ -226,31 +275,17 @@ Formidabel.bindElement = function (target, source, type) {
         }
         switch (e.data.type) {
             case 'enable':
-                if (val) {
-                    target.removeAttr('disabled');
-                } else {
-                    target.attr('disabled', 'disabled');
-                }
-                break;
             case 'enable!':
                 if (val) {
                     target.removeAttr('disabled');
                 } else {
-                    Formidabel.clear(target.get(0));
                     target.attr('disabled', 'disabled');
                 }
                 break;
             case 'disable':
-                if (val) {
-                    target.attr('disabled', 'disabled');
-                } else {
-                    target.removeAttr('disabled');
-                }
-                break;
             case 'disable!':
                 if (val) {
                     target.attr('disabled', 'disabled');
-                    Formidabel.clear(target);
                 } else {
                     target.removeAttr('disabled');
                 }
@@ -298,67 +333,55 @@ Formidabel.bindElement = function (target, source, type) {
  * Returns whether the contents/state of the given element evaluates
  * to true, i.e.: contains value, is checked, has selection etc.
  *
- * @param elmnt     HTML form element (not jQuery element)
- * @return {String} In case of radio buttons, returns the value of the selected
- *                  radio button. For a checkbox, it returns either an empty string
- *                  (not checked) or checkbox's value. For a multiple-select, it
- *                  will return the serialized currently selected value. For other
- *                  types, will return whatever is returned from jQuery's .val().
+ * @param elmnt      HTML form element (not jQuery element)
+ * @return {Boolean} For radio buttons and checkboxes, returns a Boolean depending on
+ *                   the "checked" state. For other types, will rely on jQuery's .val()
+ *                   method, typecasted to a Boolean.
  */
 Formidabel.boolValue = function (elmnt) {
     "use strict";
-    if (elmnt.type === "radio" || elmnt.type === "checkbox") {
+    if (elmnt.type === 'radio') {
         return Boolean($(elmnt).prop('checked'));
     }
-    if (elmnt.type === "select-multiple") {
-        return Boolean($(elmnt).val());
+    if (elmnt.type === 'checkbox') {
+        return Boolean($(elmnt).prop('checked'));
     }
     return Boolean($(elmnt).val());
 };
 
 /**
- * Returns the value of the given element
+ * Returns a string asking to confirm discarding changes in the form
  *
- * @param elmnt     HTML form element (not jQuery element)
- * @return {String} In case of radio buttons, returns the value of the
- *                  selected radio button. For a checkbox, it returns
- *                  either an empty string (not checked) or checkbox's
- *                  value. For a multiple-select, it will return the
- *                  serialized currently selected value. For other types,
- *                  will return whatever is returned from jQuery's .val().
+ * The string depends on the browser's language. Currentl supported: "de" and "en",
+ * with English being the fallback language.
+ *
+ * @returns {string}
  */
-Formidabel.elementValue = function (elmnt) {
-    "use strict";
-    if (elmnt.type === "radio") {
-        return $('input:radio[name=' + elmnt.name + ']:checked').val();
+Formidabel.confirmString = function() {
+    var lang = navigator.language;
+    if (!lang) {
+        lang = window.clientInformation.browserLanguage; // IE
     }
-    if (elmnt.type === "checkbox") {
-        return Boolean($(elmnt).prop('checked'));
+    switch (lang.substr(0, 2)) {
+        case 'de':
+            return 'Sind Sie sicher, dass Sie das Formular zurücksetzen möchten?\nDie ungesicherten Änderungen werden dabei verloren gehen.\n';
+        default:
+            return 'Are you sure you want to reset the form?\nUnsaved changes will be lost.\n';
     }
-    if (elmnt.type === "select-multiple") {
-        var value = $(elmnt).val();
-        if (value) {
-            return jQuery.param($(elmnt).serializeArray());
-        }
-        return '';
-    }
-    return $(elmnt).val();
 };
 
 /**
- * Clears an input element
+ * Returns a jQuery element, which is either empty or contains the <label> whose @for
+ * value matches the given element's @id value
  *
- * @param elmnt HTML form element (not jQuery element)
+ * @param element The element
+ * @returns jQuery
  */
-Formidabel.clear = function (elmnt) {
-    "use strict";
-    if (elmnt.type === "radio") {
-        this.selectedIndex = -1;
-        return;
+Formidabel.findLabel = function (element) {
+    var id = element.getAttribute('id');
+    if (id) {
+        return $('label[for="' + id + '"]');
     }
-    if (elmnt.type === "checkbox") {
-        $(elmnt).prop('checked', false);
-        return;
-    }
-    $(elmnt).val('');
+    return $();
 };
+
