@@ -119,16 +119,29 @@ Formidabel.prototype.markFormAsDirty = function (isDirty) {
 };
 
 /**
+ * Alias for isDirty()
+ *
+ * @return true, if at least 1 element was changed, false otherwise
+ * @deprecated Will be replaced by isDirty()
+ * @type {Boolean}
+ */
+Formidabel.prototype.formContainsEdits = function () {
+    return this.isDirty();
+};
+
+/**
  * Returns whether any observed elements were changed
  *
  * @return true, if at least 1 element was changed, false otherwise
  * @type {Boolean}
  */
-Formidabel.prototype.formContainsEdits = function () {
+Formidabel.prototype.isDirty = function () {
     "use strict";
     for (var theName in this.origVals) {
-        if (this.chngVals[theName]) {
-            return true; // This one changed
+        if (this.origVals.hasOwnProperty(theName)) {
+            if (this.chngVals[theName]) {
+                return true; // This one changed
+            }
         }
     }
     return false;
