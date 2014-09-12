@@ -2,7 +2,7 @@
 
 Formidabel (an old-fashioned German word which means something like “excellent”) is a simple and small (between 4 and 5 KB when minified, depending on the minifier) JavaScript library for enhancing HTML form user experience. *It is not to be confused with a Node.js module called “Formidable” (which I did not know of when I wrote the first version of Formidabel a long time ago).*
 
-Formidabel tracks edits in HTML forms in order to provide visual feedback of changed items (by changing elements’ labels’ CSS classes) and enabling/disabling the reset button automatically. The form’s clean/dirty state can also be queried from outside, for instance for getting the user’s confirmation for abandoning a dirty form.
+Formidabel tracks edits in HTML forms in order to provide visual feedback of changed items (by changing elements’ labels’ CSS classes) and enabling/disabling the reset button automatically. The form’s clean/dirty state can also be queried from outside, for instance for getting the user’s confirmation for abandoning a dirty form. Of course it will also detect if an element is first changed and then changed back to its initial value (which will cause Formidabel to mark the element as clean again).
 
 ## Dependencies & Compatibility
 Formidabel requires jQuery 1.6 or later. Initially, it was based on Prototype (somewhen around 2009), but that version hasn’t been updated for a long time.
