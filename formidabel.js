@@ -1,3 +1,5 @@
+/*! Formidabel | (c) 2009-2014 Carsten Bluem | https://bitbucket.org/BlueM/formidabel */
+
 /**
  * JavaScript library for enhancing HTML form user experience
  *
@@ -17,7 +19,6 @@
  *
  * @requires jQuery v1.6 or later
  * @license http://www.opensource.org/licenses/bsd-license.php BSD License
- * @link    https://bitbucket.org/BlueM/formidabel
  */
 function Formidabel(selector, classname, noAutoConfirm) {
 
@@ -387,4 +388,3 @@ Formidabel.findLabel = function (element) {
     }
     return $();
 };
-
