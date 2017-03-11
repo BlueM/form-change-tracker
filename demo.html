@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>form-change-tracker Demo</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+* {
+  font-family: Arial, sans-serif;
+  font-size: 98.5%;
+}
+
+body {
+  padding: 2vh 4vw;
+  line-height: 1.65;
+  max-width: 35em;
+  margin: 0 auto;
+}
+
+label {
+  font-size: .9em;
+  color: #888;
+  font-weight: bold;
+}
+
+fieldset {
+  margin: 0;
+  padding: 1em 0 0 0;
+  border-style: none;
+}
+
+fieldset + fieldset {
+  border-top: 1px dotted #aaa;
+  margin-top: 1em;
+}
+
+fieldset > div {
+  margin: 1em 0;
+}
+
+@media only screen and (min-width: 50em) {
+  fieldset > div {
+    margin: 1em 0;
+    display: flex;
+  }
+
+  fieldset > div > div {
+    width: 100%;
+  }
+}
+
+label:not(.next-to-element) {
+  display: block;
+  width: 10em;
+}
+
+div > label {
+  padding-top: 0.25em;
+}
+
+input, textarea, select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  border: 1px solid #bbb;
+}
+
+input[type=radio], input[type=checkbox] {
+  width: auto;
+  box-sizing: content-box;
+}
+
+input[type=reset], input[type=submit], input[type=button] {
+  width: auto;
+  box-sizing: content-box;
+  background-color: #eee;
+  padding: 0.4em 1em;
+  border-radius: 0.25em;
+  border: 1px solid #ccc;
+}
+
+label.control-changed {
+  color: #000;
+}
+
+input.control-changed, textarea.control-changed, select.control-changed {
+  border-color: #fc0;
+}
+
+@media only screen and (min-width: 50em) {
+  label.control-changed:before {
+    content: "Changed";
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    background-color: #fc0;
+    display: inline-block;
+    position: absolute;
+    margin-left: -8em;
+    margin-top: -0.5em;
+    opacity: 0.5;
+    color: #000;
+  }
+
+  label.next-to-element.control-changed:before {
+    margin-left: -18.25em;
+  }
+}
+
+.overlay-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.overlay-content {
+  background-color: #fff;
+  padding: 3vw;
+  border-radius: 0.5em;
+  max-width: 32em;
+  margin: 8vh auto 0 auto;
+}
+
+a.ui {
+  cursor: pointer;
+  background-color: #5eb5e0;
+  border-radius: 0.35em;
+  padding: 0.5em 1em;
+  margin-right: 1em;
+  color: #fff;
+}
+
+a.ui.confirm {
+  background-color: #a00;
+}
+
+</style>
+</head>
+<body>
+
+<p>This is a simple demo for <code>form-change-tracker</code>. Change some of the form controls below and you’ll see that the controls’ styling and the corresponding’s label styling change (plus, if your viewport is wide enough, you’ll see a “Changed” badge, which is injected via CSS) and return to their inital styling when the control is changed back to its original value. Plus, the “Reset” button at the end of the form will be enabled or disabled depending on the form.</p>
+
+<form>
+
+<fieldset>
+
+  <div>
+  <label for="text">Text</label>
+  <input type="text" name="text" id="text" value="" size="40">
+  </div>
+
+  <div>
+  <label for="textarea">Textarea</label>
+  <textarea name="textarea" id="textarea" cols="40" rows="3"></textarea>
+  </div>
+
+  <div>
+  <label for="email">E-mail</label>
+  <input type="email" name="email" id="email">
+  </div>
+
+  <div>
+  <label for="password">Password</label>
+  <input type="password" name="password" id="password">
+  </div>
+
+  <div>
+  <label for="url">URL</label>
+  <input type="url" name="url" id="url">
+  </div>
+
+  <div>
+  <label for="tel">Tel</label>
+  <input type="tel" name="tel" id="tel">
+  </div>
+
+  <div>
+  <label for="search">Search</label>
+  <input type="search" name="search" id="search">
+  </div>
+
+</fieldset>
+
+<fieldset>
+  <div>
+  <label for="select">Select Single</label>
+  <select name="select" id="select">
+    <option value="a">Option A</option>
+    <option value="b">Option B</option>
+    <option value="c">Option C</option>
+  </select>
+  </div>
+
+  <div>
+  <label for="selctm">Select Multiple</label>
+  <select name="selct" id="selctm" multiple size="3">
+    <option value="a">A</option>
+    <option value="b">B</option>
+    <option value="c">C</option>
+  </select>
+  </div>
+
+  <div>
+  <label>Radio</label>
+  <div>
+    <input type="radio" name="radio" id="radio-1"> <label for="radio-1" class="next-to-element">Radio 1</label><br>
+    <input type="radio" name="radio" id="radio-2"> <label for="radio-2" class="next-to-element">Radio 2</label>
+  </div>
+  </div>
+
+  <div>
+  <label for="chk">Checkbox</label>
+  <div>
+    <input type="checkbox" name="chk" id="chk" value="1">
+  </div>
+  </div>
+
+</fieldset>
+
+<fieldset>
+
+  <div>
+  <label for="date">Date</label>
+  <input type="date" name="date" id="date">
+  </div>
+
+  <div>
+  <label for="week">Week</label>
+  <input type="week" name="week" id="week" value="2016-W03">
+  </div>
+
+  <div>
+  <label for="month">Month</label>
+  <input type="month" name="month" id="month">
+  </div>
+
+  <div>
+  <label for="time">Time</label>
+  <input type="time" name="time" id="time">
+  </div>
+
+</fieldset>
+
+<fieldset>
+  <div>
+  <label for="file">File</label>
+  <input type="file" name="file" id="file">
+  </div>
+
+  <div>
+  <label for="color">Color</label>
+  <input type="color" name="color" id="color">
+  </div>
+
+  <div>
+  <label for="range">Range</label>
+  <input type="range" name="range" id="range">
+  </div>
+</fieldset>
+
+<input type="hidden" name="foo" value="bar"/>
+
+<input type="reset" value="Reset">
+<input type="button" value="Button">
+<input type="submit" value="Submit">
+</form>
+
+<script src="form-change-tracker.js"></script>
+<script>
+
+// This is all the code you need >>>>
+var f = new FormChangeTracker({
+  selector: 'form',
+  confirm: function(formidabelCallback) {
+  confirmReset(formidabelCallback);
+  }
+});
+// This is all the code you need <<<<
+
+// The rest of the scripting code is only for this demo.
+
+function confirmReset(callbackFunction) {
+  document.body.insertAdjacentHTML(
+    'afterbegin',
+    '<div class="overlay-cover"><div class="overlay-content">' +
+    '<p>Are you sure you want to reset the form?<br />Unsaved changes will be lost.</p>' +
+    '<a class="ui cancel">No, cancel</a> <a class="ui confirm">Yes, do it</a>' +
+    '</div></div>'
+  );
+
+  var confirm = document.querySelector('.ui.confirm');
+  var cancel = document.querySelector('.ui.cancel');
+
+  var confirmHandler = function () {
+    callbackFunction();
+    dispose();
+  };
+
+  var cancelHandler = function () {
+    dispose();
+  };
+
+  var dispose = function() {
+    confirm.removeEventListener('click', confirmHandler);
+    confirm.removeEventListener('click', confirmHandler);
+    var overlay = document.querySelector('.overlay-cover');
+    overlay.parentNode.removeChild(overlay);
+  };
+
+  confirm.addEventListener('click', confirmHandler);
+  cancel.addEventListener('click', cancelHandler);
+}
+
+document.querySelector('input[type=submit]').addEventListener('click', function(e) {
+  e.preventDefault();
+});
+
+</script>
+
+</body>
+</html>

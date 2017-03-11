@@ -1,77 +1,125 @@
 # Overview
 
-Formidabel (an old-fashioned German word which means something like “excellent”) is a simple and small (between 4 and 5 KB when minified, depending on the minifier) JavaScript library for enhancing HTML form user experience. *It is not to be confused with a Node.js module called “Formidable” (which I did not know of when I wrote the first version of Formidabel a long time ago).*
+`form-change-tracker` is a small (roughly 1.5 kB gzipped), dependency-free JavaScript browser library for keeping track of the state (pristine vs. changed) of controls in a DOM-based form.
 
-Formidabel tracks edits in HTML forms in order to provide visual feedback of changed items (by changing elements’ labels’ CSS classes) and enabling/disabling the reset button automatically. The form’s clean/dirty state can also be queried from outside, for instance for getting the user’s confirmation for abandoning a dirty form. Of course it will also detect if an element is first changed and then changed back to its initial value (which will cause Formidabel to mark the element as clean again).
+Using this state (i.e.: via CSS class names added or removed from controls and their associated `<label>` elements), you can provide visual feedback regarding which controls have changed and which have not. Of course, it will detect if an element is first changed and then changed back to its initial value. Additionally, `form-change-tracker` automatically manages disabling or enabling a reset button, if there is one in the form. 
 
-## Dependencies & Compatibility
-Formidabel requires jQuery 1.6 or later. Initially, it was based on Prototype (somewhen around 2009), but that version hasn’t been updated for a long time.
-It should run on any browser which is supported by jQuery 1.6.
+This library is probably not what you need in a project where you already are using some SPA framework (React, Angular, Vue or the like), but is a nice addition for “classical” mainly server-driven applications.
+
+The library comes in UMD flavour, so you can …
+
+* use it directly (`<script>` tag in the browser)
+* use it via the AMD module format (Require.js)
+* use it via the CommonJS module format (Node.js)
+
+Currently, this library has a version number < 1, so it will probably change. Specifically, I intend to extract the control-tracking part and make the action(s) to perform when change is observed extendable.
+
+## Browser support
+
+This library will work (at least) on:
+
+* Google Chrome Desktop and Android (no particularly new version required)
+* Firefox Desktop and Android (no particularly new version required)
+* Safari Desktop and iOS (no particularly new version required)
+* Microsoft IE11
+* Microsoft Edge (no particularly new version required)
+
+## Historical background
+
+`form-change-tracker` is the rewrite of a library called “Formidabel” (an old-fashioned German word which means something like “excellent”), which basically did the same, but required jQuery. Formidabel itself was the port of an older (started circa 2009), Prototype-based codebase from Prototype to jQuery.
+
+As I hardly use jQuery anymore – due to ES 2015, Fetch API etc. –, removing the dependency on jQuery was only natural. As I chose to make it available via npm, the name had to change from “Formidabel” to something less ambiguous, and so `form-change-tracker` was born.
+
+
+# Usage
+
+## Installation
+
+Depending on your favourite package manager, run either of:
+* `npm install form-change-tracker`
+* `yarn add form-change-tracker`. 
+
+Then, do one of the following.
+
+### “Classical” approach
+Add a `<script>` tag with the proper path in your project (HTML template or wherever appropriate), then call the constructor function:
+
+    <script src="form-change-tracker/index.js"></script>
+    <script>
+    // In the next line, you don’t even need the variable.
+    var f = new Formidabel();
+    </script>
+
+### AMD (Require.js)
+Somthing like this should do:
+
+    requirejs(["form-change-tracker"], function (FormChangeTracker) {
+      var f = new FormChangeTracker();
+    });
+
+### CommonJS (Node.js)
+Loading
+
+    #!javascript
+    var FormChangeTracker = require('form-change-tracker');
+    var f = new FormChangeTracker(); // Probably does not make sense in a plain JS context
+    
 
 ## Usage
-First of all, of course you have to make sure that Formidabel is loaded:
-```
-#!html
-<script src="/path/to/formidabel/formidabel.js"></script>
-```
 
-Then, all you have to do is something like this in your JS code:
+The most simple invocation is:
 
-```
-#!javascript
-new Formidabel('#my-form');
-```
+    new FormChangeTracker();
 
-The example assumes you have a form with `id` attribute value `my-form`. Of course, you can use the usual jQuery selectors here or use a HMTML5 `data-*` attribute such as `data-formidabel="true"` and a selector which checks for the existence of that attribute.
+This will invoke `FormChangeTracker` with the default options, which is equivalent to … 
 
-As soon as you have called the constructor function, Formidabel will observe changes (depending on the element type, that is keyup, change, click, …) to any of the form elements. If an element is changed, its `<label>` (which must, of course, be bound to the element using the `for` attribute) will get an additional CSS class (default: “changed”, but you can set a different class name as 2nd argument to the constructor) and the form’s reset button will be enabled, if it hadn’t been before. Likewise, when the user reverts the change, the CSS class is removed and the reset button is disabled (if there are no other changes). All that happens not only on blur (when leaving a text field), but immediately.
+    new FormChangeTracker({
+      selector: 'form',
+      classname: 'control-changed',
+      confirm: function (callback) {
+        if (confirm('Are you sure you want to reset the form and lose unsaved changes?')) {
+          callback();
+        }
+      };
+    });
 
-As a bonus, Formidabel will not only automatically disable or enable the reset button (if there is one in the form), but, when it is clicked, will aks for confirmation to reset a dirty form. If you do not want this, pass true as third argument to the constructor function.
+The options are:
 
-Using Formidabel’s `isDirty()` method, you could also do something like the following
-```
-#!html
-<a href="/somewhere-else/" class="cancel">Cancel</a>
+* `selector`: A CSS selector (compatible with `document.querySelector`). The first element that matches is used.
+* `classname`: A CSS class name to add to both the control and the corresponding label
+* `confirm`: A confirmation function which will be invoked if the reset button (if there is one in the form) is clicked and the form is dirty. This must be a function which is expected to take a function as argument, which should be invoked if the user confirms.
 
-</form>
+The `confirm` property is built this way to make it easy to use some external function or library for this. For instance, this would be the code for integrating SweetAlert:
 
-<script>
-var formidabel = new Formidabel('#mainform');
-
-$('a.cancel').click(
-   function(e) {
-      if (formidabel.isDirty()) {
-         if (!confirm('Are you sure you want to discard the edits?')) {
-            e.preventDefault();
-            return;
-         }
+    var f = new Formidabel({
+      selector: 'form',
+      confirm: function(formidabelCallback) {
+        swal({
+            title:        "Are you sure?",
+            text:         "Your unsaved changes will be lost.",
+            type:         "warning",
+            showCancelButton:   true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText:  "Go ahead",
+            closeOnConfirm:   true
+          },
+          function () {
+            console.info('Reset');
+            formidabelCallback();
+          });
       }
-   }
-);
-</script>
-```
-In other words: there’s a cancel link, and when clicked and the form is dirty, the user will have to confirm losing the changes.
+    });
 
-## bindElement()
-**As of Formidabel 1.2, bindElement() is deprecated**
-It is not uncommon that in a form, one element should be displayed/hidden/enabled/disabled/… depending on the state of another element. For instance, in a shop, you might want to hide (or disable) the form elements for the delivery address as long as a “Ship order to invoice address” checkbox is checked and you will want to show (or enable) them when the checkbox is unchecked.
 
-Tasks like this can be easily accomplished using `Formidabel.bindElement()`. It takes three mandatory and a fourth optional arguments:
+# Compatiblity
 
-* A jQuery selector for the target element(s), i.e. the element(s) being controlled.
-* A jQuery selector for the source element, i.e. the controlling element. (If the selector matches multiple elements, only the first one will be used.)
- * One of the strings "enable", "disable", "show" or "hide" or a function that will be called with the controlled elements as 1st and the controlling element as 2nd argument. 
-* An optional 4th argument can be given, which is expected to be a callback which will be executed to determine whether the source element's status/value evaluates to true or false. If not given, `Formidabel.boolValue()` will be used, which works fine for the usual form elements.
+Not compatible with IE11 or below.
 
-To make using `bindElement()` simple and get a consistent UI, the source/controlling element’s state will be evaluated not only when the element’s state changes, but also when the page is loaded and when the form is reset.
+# Tests
+
+Run ``npm test``
+
 
 # Version History
 
-## 1.2
-
-* Formidabel is now able to handle two or more Formidabel-enhanced forms on a single page correctly.
-* Formidabel will throw an Error if the selector/object passed to the constructor function matches not exactly 1 element.
-* Formidabel will throw an Error if the element matching the selector is not a `<form>`
-* Formidabel will automatically ask for confirmation when user hits the reset button of a dirty form (depending on the browser language; currently supported: English, German)
-* Fixed hiliting of changed radion buttons’ labels
-* `bindElement()` is marked as deprecated
+Nothing yet, as this is the first release with the new name.
