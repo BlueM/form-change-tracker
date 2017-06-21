@@ -28,7 +28,7 @@ This library will work (at least) on:
 
 `form-change-tracker` is the rewrite of a library called “Formidabel” (an old-fashioned German word which means something like “excellent”), which basically did the same, but required jQuery. Formidabel itself was the port of an older (started circa 2009), Prototype-based codebase from Prototype to jQuery.
 
-As I hardly use jQuery anymore – due to ES 2015, Fetch API etc. –, removing the dependency on jQuery was only natural. As I chose to make it available via npm, the name had to change from “Formidabel” to something less ambiguous, and so `form-change-tracker` was born.
+As I hardly use jQuery anymore – due to ES 2015, Fetch API, Angular, Vue etc. –, removing the dependency on jQuery was only natural. As I chose to make it available via npm, the name had to change from “Formidabel” to something less ambiguous, and so `form-change-tracker` was born.
 
 
 # Usage
@@ -39,49 +39,53 @@ Depending on your favourite package manager, run either of:
 * `npm install form-change-tracker`
 * `yarn add form-change-tracker`. 
 
-Then, do one of the following.
+Then, use one of the following approaches for integrating it.
 
-### “Classical” approach
-Add a `<script>` tag with the proper path in your project (HTML template or wherever appropriate), then call the constructor function:
 
-    <script src="form-change-tracker/index.js"></script>
-    <script>
-    // In the next line, you don’t even need the variable.
-    var f = new Formidabel();
-    </script>
+### “Classical” approach (script tag)
+
+```js
+<script src="node_modules/form-change-tracker/form-change-tracker.js"></script>
+<script>
+new Formidabel();
+</script>
+```
 
 ### AMD (Require.js)
-Somthing like this should do:
 
-    requirejs(["form-change-tracker"], function (FormChangeTracker) {
-      var f = new FormChangeTracker();
-    });
+```js
+requirejs(["form-change-tracker"], function (FormChangeTracker) {
+  new FormChangeTracker();
+});
+```
 
 ### CommonJS (Node.js)
-Loading
 
-    #!javascript
-    var FormChangeTracker = require('form-change-tracker');
-    var f = new FormChangeTracker(); // Probably does not make sense in a plain JS context
-    
+```js
+var FormChangeTracker = require('form-change-tracker');
+new FormChangeTracker(); // Possibly does not make sense in a plain JS context
+```  
 
 ## Usage
 
 The most simple invocation is:
 
-    new FormChangeTracker();
-
+```js
+new FormChangeTracker();
+```
 This will invoke `FormChangeTracker` with the default options, which is equivalent to … 
 
-    new FormChangeTracker({
-      selector: 'form',
-      classname: 'control-changed',
-      confirm: function (callback) {
-        if (confirm('Are you sure you want to reset the form and lose unsaved changes?')) {
-          callback();
-        }
-      };
-    });
+```js
+new FormChangeTracker({
+  selector: 'form',
+  classname: 'control-changed',
+  confirm: function (callback) {
+    if (confirm('Are you sure you want to reset the form and lose unsaved changes?')) {
+      callback();
+    }
+  }
+});
+```
 
 The options are:
 
@@ -91,29 +95,27 @@ The options are:
 
 The `confirm` property is built this way to make it easy to use some external function or library for this. For instance, this would be the code for integrating SweetAlert:
 
-    var f = new Formidabel({
-      selector: 'form',
-      confirm: function(formidabelCallback) {
-        swal({
-            title:        "Are you sure?",
-            text:         "Your unsaved changes will be lost.",
-            type:         "warning",
-            showCancelButton:   true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText:  "Go ahead",
-            closeOnConfirm:   true
-          },
-          function () {
-            console.info('Reset');
-            formidabelCallback();
-          });
-      }
-    });
+```js
+new Formidabel({
+  selector: 'form',
+  confirm: function(formidabelCallback) {
+    swal({
+        title:        "Are you sure?",
+        text:         "Your unsaved changes will be lost.",
+        type:         "warning",
+        showCancelButton:   true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText:  "Go ahead",
+        closeOnConfirm:   true
+      },
+      function () {
+        console.info('Reset');
+        formidabelCallback();
+      });
+  }
+});
+```
 
-
-# Compatiblity
-
-Not compatible with IE11 or below.
 
 # Tests
 
