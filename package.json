@@ -1,6 +1,6 @@
 {
   "name": "form-change-tracker",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Tracks pristine/dirty state of form controls",
   "main": "form-change-tracker.js",
   "directories": {

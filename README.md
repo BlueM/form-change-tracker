@@ -47,7 +47,7 @@ Then, use one of the following approaches for integrating it.
 ```js
 <script src="node_modules/form-change-tracker/form-change-tracker.js"></script>
 <script>
-new Formidabel();
+new FormChangeTracker();
 </script>
 ```
 
@@ -96,9 +96,9 @@ The options are:
 The `confirm` property is built this way to make it easy to use some external function or library for this. For instance, this would be the code for integrating SweetAlert:
 
 ```js
-new Formidabel({
+new FormChangeTracker({
   selector: 'form',
-  confirm: function(formidabelCallback) {
+  confirm: function(confirmationCallback) {
     swal({
         title:        "Are you sure?",
         text:         "Your unsaved changes will be lost.",
@@ -110,7 +110,7 @@ new Formidabel({
       },
       function () {
         console.info('Reset');
-        formidabelCallback();
+        confirmationCallback();
       });
   }
 });
