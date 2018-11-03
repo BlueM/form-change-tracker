@@ -231,7 +231,7 @@ a.ui.confirm {
 
   <div>
   <label for="week">Week</label>
-  <input type="week" name="week" id="week" value="2016-W03">
+  <input type="week" name="week" id="week">
   </div>
 
   <div>
@@ -268,59 +268,10 @@ a.ui.confirm {
 <input type="reset" value="Reset">
 <input type="button" value="Button">
 <input type="submit" value="Submit">
+<input type="button" data-action="unbind" value="Unbind (stop observing changes)">
 </form>
 
-<script src="form-change-tracker.js"></script>
-<script>
-
-// This is all the code you need >>>>
-var f = new FormChangeTracker({
-  selector: 'form',
-  confirm: function(formidabelCallback) {
-  confirmReset(formidabelCallback);
-  }
-});
-// This is all the code you need <<<<
-
-// The rest of the scripting code is only for this demo.
-
-function confirmReset(callbackFunction) {
-  document.body.insertAdjacentHTML(
-    'afterbegin',
-    '<div class="overlay-cover"><div class="overlay-content">' +
-    '<p>Are you sure you want to reset the form?<br />Unsaved changes will be lost.</p>' +
-    '<a class="ui cancel">No, cancel</a> <a class="ui confirm">Yes, do it</a>' +
-    '</div></div>'
-  );
-
-  var confirm = document.querySelector('.ui.confirm');
-  var cancel = document.querySelector('.ui.cancel');
-
-  var confirmHandler = function () {
-    callbackFunction();
-    dispose();
-  };
-
-  var cancelHandler = function () {
-    dispose();
-  };
-
-  var dispose = function() {
-    confirm.removeEventListener('click', confirmHandler);
-    confirm.removeEventListener('click', confirmHandler);
-    var overlay = document.querySelector('.overlay-cover');
-    overlay.parentNode.removeChild(overlay);
-  };
-
-  confirm.addEventListener('click', confirmHandler);
-  cancel.addEventListener('click', cancelHandler);
-}
-
-document.querySelector('input[type=submit]').addEventListener('click', function(e) {
-  e.preventDefault();
-});
-
-</script>
+<script type="module" src="demo.js"></script>
 
 </body>
 </html>
