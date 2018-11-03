@@ -1,35 +1,24 @@
 {
-  "name": "form-change-tracker",
-  "version": "0.5.1",
-  "description": "Tracks pristine/dirty state of form controls",
-  "main": "form-change-tracker.js",
-  "directories": {
-    "test": "test"
-  },
-  "devDependencies": {
-    "mocha": "^3.2.0",
-    "nyc": "^10.2.0"
-  },
+  "name": "@bluem/form-change-tracker",
+  "version": "1.0.0",
+  "description": "Vanilla JS browser library for keeping track of the state (pristine vs. changed) of controls in a DOM-based form",
+  "main": "index.js",
   "scripts": {
-    "test": "nyc mocha --timeout=3000"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/BlueM/form-change-tracker.git"
+    "url": "git+https://github.com/BlueM/form-change-tracker.git"
   },
-  "keywords": [
-    "form",
-    "controls",
-    "state"
-  ],
+  "keywords": ["form", "dom", "browser", "event"],
   "author": {
     "name": "Carsten Blüm",
     "email": "carsten@bluem.net",
-    "url": "http://www.bluem.net/"
+    "url": "https://www.bluem.net/"
   },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/BlueM/form-change-tracker/issues"
   },
-  "homepage": "https://github.com/BlueM/form-change-tracker#readme"
+  "homepage": "https://www.bluem.net/en/projects/http-response-assert/"
 }
