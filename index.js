@@ -84,7 +84,7 @@ export default class FormChangeTracker {
 
         if ('radio' === control.type) {
             // Reset other radio buttons in this form having the same name
-            radioButtons = this.form.querySelectorAll('input[type=radio][name=' + control.name + ']');
+            radioButtons = this.form.querySelectorAll('input[type=radio][name="' + control.name + '"]');
             for (i = 0, ii = radioButtons.length; i < ii; i++) {
                 radioButtons[i].classList.remove(this.classname);
                 label = FormChangeTracker.findLabel(radioButtons[i]);
