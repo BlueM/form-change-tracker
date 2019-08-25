@@ -58,13 +58,9 @@ First, write your code using an ES6 import:
 
 Then, assuming you have Parcel installed locally in your project:
 
-`./node_modules/.bin/parcel build demo.js -o dist/parcel-bundle.js` 
+`./node_modules/.bin/parcel build --public-url /dist demo.html` 
 
-(Note that you might need to install `babel-core`)
-
-Finally, simply load the generated file:
-
-`<script src="dist/parcel-bundle.js"></script>`
+This will write generated files to directory “dist” in the working directory.
 
 
 ## Usage
