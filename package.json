@@ -21,4 +21,7 @@
     "url": "https://github.com/BlueM/form-change-tracker/issues"
   },
   "homepage": "https://www.bluem.net/en/projects/form-change-tracker/",
+  "dependencies": {
+    "@bluem/form-control-event-name": "^1.0.0"
+  }
 }

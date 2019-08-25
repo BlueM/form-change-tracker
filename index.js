@@ -1,3 +1,4 @@
+import formControlEventName from './node_modules/@bluem/form-control-event-name/index.js';
 
 export default class FormChangeTracker {
 
@@ -50,7 +51,7 @@ export default class FormChangeTracker {
         const controls = this.form.querySelectorAll('input, textarea, select');
         for (let i = 0, ii = controls.length; i < ii; i++) {
             const control = controls[i];
-            const eventName = this.eventNameByType(control);
+            const eventName = formControlEventName(control);
             if (control.name && eventName) {
                 this.origVals[control.name] = FormChangeTracker.controlValue(control);
                 control.addEventListener(eventName, this.eventListener);
@@ -205,55 +206,6 @@ export default class FormChangeTracker {
         }
 
         return options;
-    }
-
-    /**
-     * Returns the name of the event to be observed based on the control type
-     *
-     * @param control
-     *
-     * @returns {String|null}
-     */
-    eventNameByType(control) {
-        switch (control.type) {
-            case 'color':
-            case 'date':
-            case 'email':
-            case 'month':
-            case 'number':
-            case 'password':
-            case 'search':
-            case 'tel':
-            case 'text':
-            case 'textarea':
-            case 'time':
-            case 'url':
-            case 'week':
-                return 'input';
-            case 'checkbox':
-            case 'radio':
-                return 'click';
-            case 'file':
-            case 'select':
-            case 'select-multiple':
-            case 'select-one':
-                return 'change';
-            case 'button':
-            case 'range':
-                if (-1 !== navigator.userAgent.indexOf('MSIE')) {
-                    // On IE11, "range" will trigger "change", but not "input"
-                    return 'change';
-                }
-                return 'input';
-            case 'hidden':
-            case 'reset':
-            case 'submit':
-                // Ignore
-                return null;
-            default:
-                console.warn(`Unsupported type: “${control.type}”`);
-                return null;
-        }
     }
 
     /**
