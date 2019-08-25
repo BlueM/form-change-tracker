@@ -121,11 +121,15 @@ As the library is simple, highly browser-oriented and easy to test manually, I c
 
 # Version History
 
-## 1.0
-- Migrated to a native ES6 class
-- Added option `callback`
-- Removed tests
-- Improved Readme
+## 1.1 (2019-08-25)
+- Replace code for getting controls’ event names with npm module `@bluem/form-control-event-name`
+- Fix bug regarding missing quoting of radiobutton attributes
+
+## 1.0 (2018-11-03)
+- Migrate to a native ES6 class
+- Add option `callback`
+- Remove tests
+- Improve Readme
 
 # 0.5.1 (2017-06-21)
 - Vanilla JS rewrite of legacy jQuery code (which was a rewrite of legacy Prototype.js code)
