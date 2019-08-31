@@ -114,7 +114,8 @@ As the library is simple, highly browser-oriented and easy to test manually, I c
 
 # Version History
 
-## 1.1.1 (2019-08-31)
+## 1.2 (2019-08-31)
+- Gracefully handle a non-matching selector passed as option, as this seems more appropriate in typical usage scenarios. (Note: in the unlikely case that client code relied on passing in a non-matching selector and expect the library to throw an error, this is a breaking change.)
 - Fix module loading
 
 ## 1.1 (2019-08-25)

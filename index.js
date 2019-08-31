@@ -13,7 +13,7 @@ export default class FormChangeTracker {
         } else {
             this.form = document.querySelector(options.selector);
             if (!this.form) {
-                throw new Error(`Selector does not match: ${options.selector}`);
+                return;
             }
         }
 
