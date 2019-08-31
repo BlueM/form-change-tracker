@@ -30,13 +30,6 @@ Depending on your favorite package manager, run either of:
 
 The library is an ES6 class, so the way to use it depends on your tooling and the browsers you want to support.
 
-### Native ES6 module
-In your ES6 module, import the library:
-
-    import FormChangeTracker from './node_modules/@bluem/form-change-tracker/index.js';
-
-Then, add `<script type="module" src="demo.js"></script>` to your code.
-
 ### With Webpack
 First, write your code using an ES6 import:
 
@@ -58,7 +51,7 @@ First, write your code using an ES6 import:
 
 Then, assuming you have Parcel installed locally in your project:
 
-`./node_modules/.bin/parcel build --public-url /dist demo.html` 
+`./node_modules/.bin/parcel build --public-url /dist demo.js` 
 
 This will write generated files to directory “dist” in the working directory.
 
@@ -120,6 +113,9 @@ As the library is simple, highly browser-oriented and easy to test manually, I c
 
 
 # Version History
+
+## 1.1.1 (2019-08-31)
+- Fix module loading
 
 ## 1.1 (2019-08-25)
 - Replace code for getting controls’ event names with npm module `@bluem/form-control-event-name`

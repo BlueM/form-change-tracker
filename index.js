@@ -1,4 +1,4 @@
-import formControlEventName from './node_modules/@bluem/form-control-event-name/index.js';
+import formControlEventName from '@bluem/form-control-event-name';
 
 export default class FormChangeTracker {
 
