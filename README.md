@@ -1,11 +1,12 @@
 # Overview
 
-`form-change-tracker` is a small (less than 2 kB gzipped), dependency-free JavaScript browser library for keeping track of the state (pristine vs. changed) of controls in a DOM-based form.
+`form-change-tracker` is a small (roughly 3 kB gzipped including its only dependency) JavaScript browser library for keeping track of the state (pristine vs. changed) of controls in a DOM-based form.
 
 Using this state (i.e.: via CSS class names added or removed from controls and their associated `<label>` elements), you can provide visual feedback regarding which controls have changed and which have not. Of course, it will detect if an element is first changed and then changed back to its initial value. Additionally, `form-change-tracker` automatically manages disabling or enabling a reset button, if there is one in the form, and will call a callback, if you like.
 
 This library is probably not what you need in a project where you already are using some SPA framework (React, Angular, Vue or the like), but is a nice addition for “classical” mainly server-side rendered applications.
 
+This Library on npm: https://www.npmjs.com/package/@bluem/form-change-tracker
 
 ## Browser support
 
@@ -63,7 +64,7 @@ The most simple invocation is:
 ```js
 new FormChangeTracker();
 ```
-This will invoke `FormChangeTracker` with the default options, which is equivalent to … 
+This will invoke `FormChangeTracker` with the default options, which is equivalent to …
 
 ```js
 new FormChangeTracker({
@@ -111,6 +112,9 @@ new FormChangeTracker({
 # Tests
 As the library is simple, highly browser-oriented and easy to test manually, I chose to remove the tests I had for the 0.* versions. Which means that there are no automated tests of any kind.
 
+
+# License
+[MIT License](https://spdx.org/licenses/MIT.html)
 
 # Version History
 
