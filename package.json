@@ -1,7 +1,7 @@
 {
   "name": "@bluem/form-change-tracker",
-  "version": "1.2.0",
-  "description": "Vanilla JS browser library for keeping track of the state (pristine vs. changed) of controls in a DOM-based form",
+  "version": "1.2.1",
+  "description": "Browser library for keeping track of the state (pristine vs. changed) of controls in a DOM-based form",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,7 +20,6 @@
   "bugs": {
     "url": "https://github.com/BlueM/form-change-tracker/issues"
   },
-  "homepage": "https://www.bluem.net/en/projects/form-change-tracker/",
   "dependencies": {
     "@bluem/form-control-event-name": "^1.0.0"
   }
